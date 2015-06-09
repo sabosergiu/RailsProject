@@ -1,0 +1,7 @@
+<%form_tag({controller: "users", action: "modify"}, method: "post") %>
+  <%=label_tag ("User id:")%><br/>
+  <>
+  <>
+  <>
+  <>
+<%end%>

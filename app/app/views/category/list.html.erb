@@ -1,0 +1,13 @@
+<p>Category listing</p>
+<ul>
+<%@categs.each do |categ|%>
+  <li><%=link_to categ.name%></li>
+<%end%>
+</ul>
+<%if !current_user.is_simple_user?%>
+  <%=form_tag({controller: "category",action: "add"},method: "post") do |f|%>
+    <%=label_tag "Category name: "%>
+    <%=text_field :category, :name, :placeholder =>"New category name..."%>
+    <%=button_tag "Add category"%>
+  <%end -%>
+<%end%>

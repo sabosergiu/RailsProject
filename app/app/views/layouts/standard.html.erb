@@ -1,0 +1,20 @@
+<html>
+<head>
+  <title>App</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <table style="float:right">
+    <tr ><td style="float:right">Welcome,<%=current_user.email%></td></tr>
+    <%if current_user.user_type==nil%>
+      <tr><td style="float:right">user</td></tr>
+    <%else%>
+      <tr><td style="float:right"><%=current_user.user_type%></td></tr>
+    <%end%>
+    <tr><td style="float:right"><%=link_to "Sign Out", destroy_user_session_path, method: :delete%></td></tr>
+  </table>
+<%=yield%>
+</body>
+</html>

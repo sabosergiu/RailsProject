@@ -1,13 +1,4 @@
-<% provide(:title, "LogIn")%>
-<%if session[:user_id]%>
-	<p><strong>You are already logged in!<strong></p>
-<%else%>
-	<p>Please login!</p>
-	<%= form_for(:session,url: login_path) do |fr|%>
-		<%=fr.label :username %><br/>
-		<%= fr.text_field :username, class:'form-control'%><br/>
-		<%=fr.label :password %><br/>
-		<%=fr.password_field :password, class: 'form-control'%><br/>
-		<%=fr.submit "Log IN"%>
-	<%end%>
-<%end%>
+<table style="float:right">
+  <tr><td><%=link_to "Sign Out", destroy_user_session_path, method: :delete%></td></tr>
+</table>
+<p><strong>You are logged in!!<strong></p>

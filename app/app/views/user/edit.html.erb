@@ -1,0 +1,32 @@
+<%if current_user.is_simple_user? or current_user.is_moderator?%>
+  <strong>You are not allowed to view this page!!</strong>
+  <strong>Please go back <%=link_to "here", "/"%></strong>
+<%end%>
+<%if current_user.is_sysadmin? or current_user.is_admin?%>
+<%if @user==nil and params[:id]!=nil%>
+  <strong>You are not allowed to access such informations!</strong>
+<%elsif @user==nil and params[:id]==nil%>
+  <strong>You must provide the id of the user whose details you want to edit!</strong>
+<%else%>
+<p><strong>User details</strong></p><br/>
+
+<%=form_tag({controller: "user", action: "update"}, method: "post") do |f|%>
+  <%=label_tag "User id:"%><br/>
+  <%=text_field :user,:id, :readonly => true, :value =>@user.id%><br/>
+  <%=label_tag "Email address:"%><br/>
+  <%=text_field :user, :email, :readonly => true, :value => @user.email%><br/>
+  <%=label_tag "New Password:"%><br/>
+  <%=password_field :user, :password%><br/>
+  <%=label_tag "Confirm Password:"%><br/>
+  <%=password_field :user, :con_pass%><br/>
+  <%=label_tag "User Type: "%>
+  <%if @user.user_type==nil%>
+    <%@type="user" %>
+  <%else%>
+    <%@type=@user.user_type%>
+  <%end%>
+  <%=select_tag :user_type, options_for_select(['user','moderator','admin', 'sysadmin'],@type) %><br/>
+  <%=button_tag "Save changes", {controller: "user", action:"update", method: "post"}%>
+<%end -%>
+<%end%>
+<%end%>

@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
-  get    'login'   => 'session#new'#'sessions#new'
-  post   'login'   => 'session#create'
-  delete 'logout'  => 'session#delete'
-  get   'user_list' => 'session#list'
+  devise_for :users
+  get "/" => "home#start", :as => "root"
+  get "user/list" => 'user#list'
+  post "user/edit" => 'user#edit'
+  post "user/update" => 'user#update'
+  get "user/edit" => 'user#edit'
+#category
+  get "category/list" => 'category#list'
+  post "category/list" => 'category#add'
+#  devise_for :users, controllers: { sessions: "users/sessions" }
 #  resources :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
