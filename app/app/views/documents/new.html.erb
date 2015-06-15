@@ -1,0 +1,107 @@
+<%if !current_user.is_simple_user?%>
+<h2>Add a new file below!</h2>
+<strong>Suport for the following formats: <%=DocumentUploader.new.extension_white_list%></strong>
+<%=form_for @file, html: {multipart: true} do |f|%>
+  <%=f.label :description, "File Description"%>
+  <%=f.text_field :description%><br/>
+  <%=f.label :document%>
+  <%=f.file_field :document%><br/>
+  <%=label_tag "Category: "%>
+  <%=collection_select :category, :id, Category.where("approved=true"), :id, :name%>
+  <br/>
+  <%=f.submit "Upload"%>
+<%end%>
+<%end%>
+
+
+<br/><hr/>
+<h2>Document listing</h2>
+<%if current_user.is_simple_user? or current_user.is_moderator?%>
+  <table cellpadding="10" valign="middle" id="doc_table">
+  <tr id="doc_table">
+    <th colspan="2" align="center">FileName</th>
+    <th align="center">Category</th>
+    <th align="center">Uploaded By</th>
+    <th align="center">Uploaded At</th>
+    <th align="center">Available Conversions</th>
+  </tr>
+  <%@docs.each do |doc|%>
+    <tr>
+    <td valign="middle" align="center">
+      <%ext=doc.name.gsub(/^[^.]*./,'')%>
+      <%=image_tag("/ext_icons/#{ext}.png", width: 50, height: 50)%>
+    </td>
+    <td valign="middle" align="center">
+      <%=link_to doc.name, {:controller => "documents", :action =>"download", :id =>doc.id}%><br/>
+    </td>
+    <td valign="middle" align="center">
+      <%=doc.category.name%>
+    </td>
+    <td valign="middle" align="center">
+      <%=doc.user.email%>
+    </td>
+    <td valign="middle" align="center">
+      <%=doc.uploaded_at%>
+    </td>
+    <td valign="middle" align="center">
+      |
+      <%doc.get_versions.each do |vers|%>
+        
+          <%=link_to vers.document.file.extension, {:controller => "documents", :action =>"download", :id =>vers.id}%> | 
+        
+      <%end%>
+    </td>
+    </tr>
+  <%end%>
+  </table>
+
+<%end%>
+<%if current_user.is_admin?%>
+  <table border="1" style="width:100%">
+    <tr>
+      <th>File</th>
+      <th>Category</th>
+      <th>Uploaded By</th>
+      <th>Uploaded At</th>
+      <th>Delete?</th>
+    </tr>
+  <%@docs.each do |doc|%>
+    <tr>
+      <td><%=link_to doc.name, {:controller => "documents", :action =>"download", :id =>doc.id}%></td>
+      <td><%=doc.category.name%></td>
+      <td><%=doc.user.email%></td>
+      <td><%=doc.uploaded_at%></td>
+      <td><%=link_to "Delete File", {:controller => "documents", :action => "change_state", :id =>doc.id}%></td>
+    </tr>
+  <%end%>
+  </table>
+<%end%>
+<%if current_user.is_sysadmin?%>
+  <table border="1" style="width:100%">
+    <tr>
+      <th>File</th>
+      <th>Category</th>
+      <th>Uploaded By</th>
+      <th>Uploaded At</th>
+      <th>Marked Deleted</th>
+      <th>Delete?</th>
+      <th>Force Delete</th>
+    </tr>
+  <%@docs.each do |doc|%>
+    <tr>
+      <td><%=link_to doc.name, {:controller => "documents", :action =>"download", :id =>doc.id}%></td>
+      <td><%=doc.category.name%></td>
+      <td><%=doc.user.email%></td>
+      <td><%=doc.uploaded_at%></td>
+      <%if doc.deleted%>
+      <td>Yes</td>
+      <td><%=link_to "Recover File", {:controller => "documents", :action => "change_state", :id =>doc.id}%></td>
+      <%else%>
+      <td>No</td>
+      <td><%=link_to "Delete File", {:controller => "documents", :action => "change_state", :id =>doc.id}%></td>
+      <%end%>
+      <td><%=link_to "Force delete", {:controller=> "documents", :action => "force_delete", :id=>doc.id}%></td>
+    </tr>
+  <%end%>
+  </table>
+<%end%>
