@@ -1,0 +1,31 @@
+<%if flash[:notice]%>
+  <div class="notice" align="center">
+    <h2><font color="green"><%=flash[:notice]%></font></h2><br/>
+  </div>
+<%end%>
+<%if flash[:alert]%>
+  <div class="alert" align="center">
+    <h2><font color="red"><%=flash[:alert]%></font></h2><br/>
+  </div>
+<%end%>
+<%if current_user.is_sysadmin?%>
+  <h2>Version Listing:</h2>
+  <table cellpadding="4" id="doc_table">
+    <tr>
+      <th>Filename</th>
+      <th>Version Date</th>
+      <th colspan="3">Options</th>
+    </tr>
+    <%@backups.each do |backup|%>
+    <tr>
+      <td align="center"><%=backup.filename%></td>
+      <td align="center"><%=backup.saved_at%></td>
+      <td aling="center"><%=link_to "Fix DB", {:controller => "version", :action => "fix", :id =>backup.id}%></td>
+      <td align="center"><%=link_to "Revert DB", {:controller => "version", :action => "revert", :id =>backup.id}%></td>
+      <td align="center"><%=link_to "Remove", {:controller => "version", :action => "delete", :id =>backup.id}%></td>
+    </tr>
+    <%end%>
+  </table>
+<%else%>
+  Restricted acces, please go back here: <%=link_to "Home", "/"%>
+<%end%>
