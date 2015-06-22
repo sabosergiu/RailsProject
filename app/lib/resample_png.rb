@@ -2,7 +2,7 @@ module ResamplePng
   
   require 'chunky_png'
   
-  def self.nearest_neighbor (image,new_width,new_height)
+  def ResamplePng.nearest_neighbor (image,new_width,new_height)
     #image = ChunkyPNG::Image.from_file(fname)
     new_image = ChunkyPNG::Image.new(new_width, new_height, ChunkyPNG::Color::TRANSPARENT, image.metadata)
     x_rat,y_rat=resample_ratio(image.width, image.height, new_width, new_height)
@@ -16,7 +16,7 @@ module ResamplePng
     new_image
   end
 
-  def self.create_version (image, path, fname,width, height)
+  def ResamplePng.create_version (image, path, fname,width, height)
     case width
     when 11..100
       s1="00#{width}"
@@ -39,15 +39,15 @@ module ResamplePng
     str
   end
 
-  def self.resample_ratio (width, height, new_width, new_height)
+  def ResamplePng.resample_ratio (width, height, new_width, new_height)
     return width.to_f/new_width, height.to_f/new_height
   end
 
-  def self.resize_version_list
+  def ResamplePng.resize_version_list
     [[50,50],[200,200],[600,600],[1000,1000]]
   end
 
-  def self.image_versioning(path,fname)
+  def ResamplePng.image_versioning(path,fname)
     image = ChunkyPNG::Image.from_file("#{path}#{fname}")
     names=[]
     resize_version_list.each do |dim|

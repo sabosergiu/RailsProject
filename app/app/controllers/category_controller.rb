@@ -12,37 +12,41 @@ class CategoryController < ApplicationController
 
   def change_validation
     if current_user.is_sysadmin?
-      begin
-        @categ=Category.find(params[:id])
-      rescue
-        redirect_to action: "list"
-        return
-      end
-      if @categ!=nil
-        @categ.approved= !@categ.approved
+      @categ = Category.find_by(id: params[:id])
+      if @categ
+        if @categ.approved
+          flash[:notice] = "Category succesfully invalidated!"
+        else
+          flash[:notice] = "Category succesfully validated!"
+        end
+        @categ.approved = !@categ.approved
         @categ.save
+      else
+        flash[:alert] = "Category not found!"
       end
+    else
+      flash[:alert] = "Invalid acces!"
     end
     redirect_to action: "list"
   end
 
-  def delete
-    #
-    @categ=Category.find(params[:id])
-    @categ.destroy
-  end
-
   def add
-    if params[:category][:name]==nil or params[:category][:name]==""
+
+    if (!params[:category][:name] || params[:category][:name] == "")
       redirect_to action: "list"
+      flash[:alert] = "The category was not added! Empty name!"
       return
     end
-    @categ=Category.new
-    @categ.name=params[:category][:name] 
+
+    @categ = Category.new
+    @categ.name = params[:category][:name] 
+
     if current_user.is_sysadmin?
-      @categ.approved=true
+      @categ.approved = true
     end
+
     @categ.save
+    flash[:notice] = "Category succesfully added!"
     redirect_to action: "list"
   end
 end

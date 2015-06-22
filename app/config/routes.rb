@@ -1,14 +1,28 @@
 Rails.application.routes.draw do
   devise_for :users
   get "/" => "home#start", :as => "root"
-  get "user/list" => 'user#list'
+  get "user" => 'user#list'
   post "user/edit" => 'user#edit'
   post "user/update" => 'user#update'
   get "user/edit" => 'user#edit'
+
 #category
-  get "category/list" => 'category#list'
-  post "category/list" => 'category#add'
-#  devise_for :users, controllers: { sessions: "users/sessions" }
+  get "category" => 'category#list'
+  post "category" => 'category#add'
+  get "category/change" => 'category#change_validation'
+#document
+  resources :documents, only: [:new, :create, :destroy]
+  get "documents" => 'documents#new'
+  get "documents/list" => 'documents#list'
+  get "documents/download" => 'documents#download'
+  get "documents/change" => 'documents#change_state'
+  get "documents/delete" => 'documents#force_delete'
+#db versions
+  get "version" => 'version#view'
+  get "version/delete" => 'version#delete'
+  get "version/fix" => 'version#fix'
+  get "version/revert" => 'version#revert'
+
 #  resources :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

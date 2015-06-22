@@ -1,13 +1,40 @@
-<p>Category listing</p>
-<ul>
-<%@categs.each do |categ|%>
-  <li><%=link_to categ.name%></li>
+<%if flash[:notice]%>
+    <div class="notice" align="center">
+      <h2><font color="green"><%=flash[:notice]%></font></h2><hr/>
+    </div>
 <%end%>
+<%if flash[:alert]%>
+    <div class="notice" align="center">
+      <h2><font color="red"><%=flash[:alert]%></font></h2><hr/>
+    </div>
+<%end%>
+<h2>Category listing</h2>
+
+<%if current_user.is_user?%>
+  <ul>
+  <%@categs.each do |categ|%>
+    <li><%=link_to categ.name , {:controller => "documents", :action => "new",:categ =>categ.id}%></li>
+  <%end%>
+  </ul>
+<%else%>
+<ul>
+  <%@categs.each do |categ|%>
+  <li><%=link_to categ.name, {:controller => "documents", :action => "new",:categ =>categ.id}%>
+    <%if current_user.is_sysadmin?%>
+    <% if categ.is_confirmed?%>
+       => <%=link_to "Invalidate", {:controller=>"category",:action=>"change_validation",:id=>categ.id}%>
+    <%else%>
+      => <%=link_to "Validate", {:controller=>"category",:action=>"change_validation",:id=>categ.id}%>
+    <%end%>
+    <%end%>
+  </li>
+  <%end%>
 </ul>
-<%if !current_user.is_simple_user?%>
+<%end%>
+<%if !current_user.is_user?%>
   <%=form_tag({controller: "category",action: "add"},method: "post") do |f|%>
     <%=label_tag "Category name: "%>
-    <%=text_field :category, :name, :placeholder =>"New category name..."%>
+    <%=text_field :category, :name, :placeholder =>"New category name...", :autocomplete => :off%>
     <%=button_tag "Add category"%>
   <%end -%>
 <%end%>

@@ -1,7 +1,0 @@
-class Category < ActiveRecord::Base
-  validates_presence_of name
-  
-  def is_confirmed?
-    return self.approved
-  end
-end

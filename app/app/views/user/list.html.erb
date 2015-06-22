@@ -1,6 +1,36 @@
-<strong>List of users</strong>
-<ul>
-<% @users.each do |user|%>
-<li><%=link_to user.id.to_s<<","<<user.email, {:controller => "user", :action => "edit", :id => user.id } %></li>
+<%if current_user.is_user? or current_user.is_moderator?%>
+  <strong>You are not allowed to view this page!!</strong>
+  <strong>Please go back <%=link_to "here", "/"%></strong>
+<%elsif current_user.is_admin? or current_user.is_sysadmin?%>
+<%if flash[:notice]%>
+    <div class="notice" align="center">
+      <h2><font color="green"><%=flash[:notice]%></font></h2><hr/>
+    </div>
 <%end%>
-</ul>
+<%if flash[:alert]%>
+    <div class="notice" align="center">
+      <h2><font color="red"><%=flash[:alert]%></font></h2><hr/>
+    </div>
+<%end%>
+<h2>List of users:</h2>
+<table id="doc_table">
+  <tr>
+    <th>ID</th>
+    <th>Email</th>
+    <th>Last Sign In</th>
+    <th>Last Sign In IP</th>
+    <th>No of Sign In's</th>
+    <th>User Type</th>
+  </tr>
+  <% @users.each do |user|%>
+    <tr>
+      <td align="center"><%=user.id%></td>
+      <td align="center"><%=link_to user.email, {:controller => "user", :action => "edit", :id => user.id } %></td>
+      <td align="center"><%=user.last_sign_in_at%></td>
+      <td align="center"><%=user.last_sign_in_ip%></td>
+      <td align="center"><%=user.sign_in_count%></td>
+      <td align="center"><%=user.user_type%></td>
+    </tr>
+  <%end%>
+</table>
+<%end%>

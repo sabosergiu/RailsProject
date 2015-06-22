@@ -1,20 +1,42 @@
 <html>
 <head>
-  <title>App</title>
+  <title>ConversionApp</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
-  <table style="float:right">
-    <tr ><td style="float:right">Welcome,<%=current_user.email%></td></tr>
-    <%if current_user.user_type==nil%>
-      <tr><td style="float:right">user</td></tr>
+<body style="height: 85%;" bgcolor="#EBEBEB" style='font-family="Arial, Helvetica, sans-serif"'>
+  <div align="right">
+  <table style="width=100%">
+    <tr><td align="right">Welcome, <%=current_user.email%></td></tr>
+    <%if current_user.is_user?%>
+      <tr><td align="right">user</td></tr>
     <%else%>
-      <tr><td style="float:right"><%=current_user.user_type%></td></tr>
+      <tr><td align="right"><%=current_user.user_type%></td></tr>
     <%end%>
-    <tr><td style="float:right"><%=link_to "Sign Out", destroy_user_session_path, method: :delete%></td></tr>
+    <tr><td align="right"><%=link_to "Sign Out", destroy_user_session_path, method: :delete%></td></tr>
   </table>
-<%=yield%>
+  </div>
+  <hr/>
+  <table cellpadding="13" style="height:100%;">
+    <tr>
+      <td style="border-right: thin solid #373737;height:100%" valign="top">
+      <ul>
+        <li><%=link_to "Main", "/"%></li>
+        <li><%=link_to "Categories", category_path%></li>
+        <li><%=link_to "Documents", documents_path%></li>
+        <%if current_user.is_admin? or current_user.is_sysadmin?%>
+        <li><%=link_to "Users", user_path%></li>
+        <%end%>
+        <%if current_user.is_sysadmin?%>
+        <li><%=link_to "Versions", version_path%></li>
+        <%end%>
+        <li><%=link_to "Account", {:controller => "user", :action => "edit"}%></li>
+      </ul>
+      </td>
+      <td style="width:100%" valign="top"><%=yield%></td>
+    </tr>
+  </table>
+  <br/><br/><br/><br/><br/>
 </body>
 </html>

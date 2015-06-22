@@ -20,9 +20,9 @@
     <tr>
       <td align="center"><%=backup.filename%></td>
       <td align="center"><%=backup.saved_at%></td>
-      <td aling="center"><%=link_to "Fix DB", {:controller => "version", :action => "fix", :id =>backup.id}%></td>
-      <td align="center"><%=link_to "Revert DB", {:controller => "version", :action => "revert", :id =>backup.id}%></td>
-      <td align="center"><%=link_to "Remove", {:controller => "version", :action => "delete", :id =>backup.id}%></td>
+      <td aling="center"><%=link_to "Fix DB", {:controller => "version", :action => "fix", :id => backup.id}%></td>
+      <td align="center"><%=link_to "Revert DB", {:controller => "version", :action => "revert", :id => backup.id}%></td>
+      <td align="center"><%=link_to "Remove", {:controller => "version", :action => "delete", :id => backup.id}%></td>
     </tr>
     <%end%>
   </table>
